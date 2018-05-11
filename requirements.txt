@@ -1,0 +1,2 @@
+django
+PyYAML==3.11

@@ -1,0 +1,6 @@
+
+django:
+  settings:
+    allowed_hosts:    # list of allowed_hosts destined to settings.ALLOWED_HOSTS
+      - "localhost"
+      - "127.0.0.1"
