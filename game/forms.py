@@ -1,6 +1,7 @@
 
 from django import forms
 from django.contrib.auth.models import User
+from django.db.utils import IntegrityError
 from .core import game
 from .core.constants import GAME_GENRES
 
@@ -18,7 +19,9 @@ class CreateGameForm(forms.Form):
         self.fields['genre'].initial = GAME_GENRES.default
         # self.fields['genre'].help_text = 'Select a game genre : %s' % GAME_GENRES.as_list_labels()
 
-        if not self.request.user.is_anonymous:
+        if self.request.user.is_anonymous:
+            self.fields['creator'].required = True
+        else:
             self.fields['creator'].widget = forms.HiddenInput()
 
         self.game = None
@@ -37,6 +40,10 @@ class CreateGameForm(forms.Form):
                 _gameCreator = User(username=_creatorName, email='', password='abc')
                 try:
                     _gameCreator.save()
+                except IntegrityError:
+                    _msg = 'Username unavailable : %s. Please choose another name.' % _creatorName
+                    print('CreateGameForm.execute: %s' % _msg)
+                    return False, _msg
                 except Exception as e:
                     _msg = 'Error : %s %s' % (type(e), e)
                     print('CreateGameForm.execute: %s' % _msg)

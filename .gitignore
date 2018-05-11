@@ -6,5 +6,10 @@ db.sqlite3
 # PyCharm stuff:
 .idea
 
+# Stack stuff:
+Dockerfile
+
 # Private configuration stuff:
 *_private.yml
+*.sqlite3*
+_BACKUP/*
