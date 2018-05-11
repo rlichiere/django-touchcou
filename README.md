@@ -2,7 +2,17 @@
 **touché-coulé** game based on **Django** framework.
 
 
-# Game status sequence :
+# Deployment instructions
+
+## First build
+
+1. Install project requirements
+   pip install -r requirements
+
+
+
+
+# Game status sequence
 
 1. waiting_registrations_opening
 1. waiting_players

@@ -15,3 +15,14 @@ class Game(models.Model):
 
     def __str__(self):
         return self.name
+
+    def registrationsOpened(self):
+        if self.players.count() < len(self.genre):
+            return True
+        return False
+
+
+def createGame(game_name, game_genre, game_creator):
+    _game = Game(name=game_name, genre=game_genre, creator=game_creator)
+    _game.save()
+    return _game

@@ -1,0 +1,92 @@
+{% extends "game/base.html" %}
+
+{% block page_title %}Prepare player{% endblock %}
+
+{% block page_body %}
+
+<form role="form" action="{% url "game-player-prepare" game_id="1" %}" method="post">
+{% csrf_token %}
+<div class="row">
+    <div class="col-lg-4"><img src="" title="Player body picture" width="480" height="740"/></div>
+    <div class="col-lg-6">
+        <h3>Preparation grid</h3>
+        <table class="table table-striped table-reflow">
+            <tr>
+                <th>Zone \ Media</th>
+                <th>Hand</th>
+                <th>Finger</th>
+                <th>Lips</th>
+                <th>Tongue</th>
+                <th>Sex</th>
+                <th>Foot</th>
+            </tr>
+            <tr>
+                <td>Hand</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>V</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Finger</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>V</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Lips</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>V</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Tongue</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>V</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Sex</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>V</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Foot</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>V</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-lg-8">
+        <h3>Preparation informations</h3>
+        <p><span id="medias_count">3</span> / <span id="medias_limit">3</span> medias</p>
+        <p><span id="zones_count">4</span> / <span id="zones_limit">4</span> zones</p>
+    </div>
+    <div class="col-lg-8">
+        <div class="pull-right">
+            <button type="button" class="btn btn-default">Cancel</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </div>
+</div>
+</form>
+{% endblock %}

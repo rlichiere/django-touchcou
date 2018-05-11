@@ -1,6 +1,18 @@
 
+# django app configuration
 django:
+
+  # django app settings
   settings:
-    allowed_hosts:    # list of allowed_hosts destined to settings.ALLOWED_HOSTS
+
+    # list of allowed_hosts destined to settings.ALLOWED_HOSTS
+    allowed_hosts:
       - "localhost"
       - "127.0.0.1"
+
+    # app database configuration and credentials
+    database:
+      dbname: "app_dbname"
+      host: "host.fqdn"
+      username: "db_username"
+      userpass: "db_password"

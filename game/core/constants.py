@@ -45,7 +45,10 @@ class GameStatusConstants(object):
         return ''.join('%s,' % _ for _ in self.as_list())
 
     def as_choices(self):
-        return list().extend((_, _) for _ in self.as_list())
+        _res = list()
+        for choice in self.as_list():
+            _res.append(tuple((choice, choice)))
+        return _res
 
 
 class GameGenreConstants(object):
@@ -70,7 +73,10 @@ class GameGenreConstants(object):
         return ''.join('%s,' % _ for _ in self.as_list())
 
     def as_choices(self):
-        return list().extend((_, _) for _ in self.as_list())
+        _res = list()
+        for choice in self.as_list():
+            _res.append(tuple((choice, choice)))
+        return _res
 
 
 GAME_STATUS = GameStatusConstants()

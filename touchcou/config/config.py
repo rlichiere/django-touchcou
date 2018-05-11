@@ -17,7 +17,7 @@ class Config(object):
         _configFile = open('%s/touchcou/config/config_private.yml' % self.baseDir)
         self.data = yaml.load(_configFile)
 
-    def get(self, path, default):
+    def get(self, path, default=None):
         _res = utils.access(self.data, path)
         if _res is None:
             return default

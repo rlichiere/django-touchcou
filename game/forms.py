@@ -2,8 +2,9 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
-from .core import game
 from .core.constants import GAME_GENRES
+
+from .models import createGame
 
 
 class CreateGameForm(forms.Form):
@@ -17,7 +18,6 @@ class CreateGameForm(forms.Form):
         super(CreateGameForm, self).__init__(*args, **kwargs)
 
         self.fields['genre'].initial = GAME_GENRES.default
-        # self.fields['genre'].help_text = 'Select a game genre : %s' % GAME_GENRES.as_list_labels()
 
         if self.request.user.is_anonymous:
             self.fields['creator'].required = True
@@ -59,8 +59,7 @@ class CreateGameForm(forms.Form):
                     return False, _msg
 
             # create game
-            _gameLogic = game.GameLogic()
-            self.game = _gameLogic.createGame(game_name=_gameName, game_genre=_gameGenre, game_creator=_gameCreator)
+            self.game = createGame(game_name=_gameName, game_genre=_gameGenre, game_creator=_gameCreator)
 
         except Exception as e:
             print('CreateGameForm.execute: error : %s %s' % (type(e), e))

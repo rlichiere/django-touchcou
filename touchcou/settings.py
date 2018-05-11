@@ -84,13 +84,24 @@ WSGI_APPLICATION = 'touchcou.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
+_dbConf = config.config.get('django/settings/database')
+print('setting: database configuration : %s' % _dbConf)
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': _dbConf.get('dbname'),
+        'HOST': _dbConf.get('host'),
+        'USER': _dbConf.get('username'),
+        'PASSWORD': _dbConf.get('userpass'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

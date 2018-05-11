@@ -23,5 +23,6 @@ urlpatterns = [
     path('list', views.GamesListView.as_view(), name='game-list'),
     path('create', views.GameCreateView.as_view(), name='game-create'),
     # re_path('join/(?P<game_id>[0-9]+)', views.GameJoinView.as_view(), name='game-join'),
+    re_path('prepare/(?P<game_id>[0-9]+)', views.GamePlayerPrepareView.as_view(), name='game-player-prepare'),
     re_path('board/(?P<game_id>[0-9]+)', views.GameBoardView.as_view(), name='game-board'),
 ]

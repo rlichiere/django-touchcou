@@ -1,10 +1,10 @@
 
 from django.contrib import messages
-from django.http import Http404
-from django.urls import reverse
-from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.models import User
 
-from django.views.generic import FormView, TemplateView, UpdateView
+from django.urls import reverse
+
+from django.views.generic import FormView, TemplateView
 from django.http import HttpResponseRedirect
 
 from . import forms
@@ -23,17 +23,41 @@ class GamesListView(TemplateView):
     template_name = 'game/game_list.html'
 
     def get_context_data(self, **kwargs):
+        _l = '%s.get_context_data:' % self.__class__
         context = super(GamesListView, self).get_context_data(**kwargs)
 
-        _games = models.Game.objects.all()
-        context['user_games'] = _games.filter(creator=self.request.user)
+        context['user_games'] = None
+        context['opened_games'] = None
 
+        _user = None
+        try:
+            _user = User.objects.get(id=self.request.user.id)
+        except User.DoesNotExist as e:
+            # anonymous user detection
+            pass
+        except Exception as e:
+            print('%s unexpected error while retrieving user : %s: %s %s' % (_l, self.request.user, type(e), e))
+            raise Exception(e)
+
+        _games = models.Game.objects.all()
+        _userGames = list()
         _openedGames = list()
-        for _game in _games.exclude(creator=self.request.user):
-            if self.request.user not in _game.players.all():
+        for _game in _games:
+            if not _game.registrationsOpened():
                 continue
-            _openedGames = _game
-        context['opened_games'] = _openedGames
+
+            if _user is not None:
+                if _user in _game.players.all():
+                    _userGames.append(_game)
+                else:
+                    _openedGames.append(_game)
+            else:
+                _openedGames.append(_game)
+
+        if len(_userGames) > 0:
+            context['user_games'] = _userGames
+        if len(_openedGames) > 0:
+            context['opened_games'] = _openedGames
 
         return context
 
@@ -59,13 +83,18 @@ class GameCreateView(FormView):
             _msg = 'Game %s created successfully' % form.game.name
             print('GameCreateView.form_valid: %s' % _msg)
             messages.add_message(self.request, messages.SUCCESS, message=_msg, fail_silently=True)
-            return HttpResponseRedirect(reverse('game-board', kwargs={'game_id': form.game.id}))
+            # return HttpResponseRedirect(reverse('game-board', kwargs={'game_id': form.game.id}))
+            return HttpResponseRedirect(reverse('game-player-prepare', kwargs={'game_id': form.game.id}))
 
     def form_invalid(self, form):
         _msg = 'Error : %s' % form.errors.as_text()
         print('GameCreateView.form_invalid: %s' % _msg)
         messages.add_message(self.request, messages.ERROR, message=_msg, fail_silently=True)
         return HttpResponseRedirect(reverse('game-home'))
+
+
+class GamePlayerPrepareView(TemplateView):
+    template_name = 'game/game_player_prepare.html'
 
 
 class GameBoardView(TemplateView):
