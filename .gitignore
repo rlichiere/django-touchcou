@@ -10,5 +10,5 @@ db.sqlite3
 Dockerfile
 
 # Private configuration stuff:
-*_private.yml
 _BACKUP/*
+*_private.yml
