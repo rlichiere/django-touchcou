@@ -20,5 +20,8 @@ from . import views
 
 urlpatterns = [
     path('', views.HomeView.as_view(), name='game-home'),
-    re_path('board/(?P<game_id>[0-9]+)', views.BoardView.as_view(), name='game-board'),
+    path('list', views.GamesListView.as_view(), name='game-list'),
+    path('create', views.GameCreateView.as_view(), name='game-create'),
+    # re_path('join/(?P<game_id>[0-9]+)', views.GameJoinView.as_view(), name='game-join'),
+    re_path('board/(?P<game_id>[0-9]+)', views.GameBoardView.as_view(), name='game-board'),
 ]

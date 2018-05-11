@@ -3,5 +3,11 @@
 {% block page_title %}Home{% endblock %}
 
 {% block page_body %}
-Home body.
+    <p>Welcome in Touché-coulé</p>
+    <p>Please join an <a class="btn btn-primary" href="{% url "game-list" %}">opened</a> game or <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#game_create_modal" href="{% url "game-create" %}">create</button> a new one.</p>
+    <div id="game_create_modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+    </div>
 {% endblock %}

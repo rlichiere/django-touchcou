@@ -1,0 +1,45 @@
+{% extends "game/base.html" %}
+
+{% block page_title %}List of games{% endblock %}
+
+{% block page_body %}
+    <div class="col-lg-6">
+        <h3>Opened games</h3>
+        <table class="table table-stripped table-reflow">
+            <tr>
+                <th>Game name</th>
+                <th>Game genre</th>
+                <th>Enter game</th>
+            </tr>
+            {% for game in opened_games %}
+            <tr>
+                <td>{{ game.name }}</td>
+                <td>{{ game.genre }}</td>
+                <td><!-- <a type="button" class="btn btn-primary" href="{% url "game-join" game_id=game.id %}">Join</a>--></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" align="center">No opened games yet</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-lg-6">
+        <h3>Your games</h3>
+        <table class="table table-stripped table-reflow">
+            <tr>
+                <th>Game name</th>
+                <th>Game genre</th>
+                <th>Enter game</th>
+            </tr>
+            {% for game in user_games %}
+            <tr>
+                <td>{{ game.name }}</td>
+                <td>{{ game.genre }}</td>
+                <td><a type="button" class="btn btn-primary" href="{% url "game-board" game_id=game.id %}">Enter</a></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" align="center">You don't have running games</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+
+{% endblock %}
