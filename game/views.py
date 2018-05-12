@@ -1,11 +1,10 @@
 
 from django.contrib import messages
 from django.contrib.auth.models import User
-
-from django.urls import reverse
-
-from django.views.generic import FormView, TemplateView
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from django.urls import reverse
+from django.views.generic import FormView, TemplateView, DetailView
 
 from . import forms
 from . import models
@@ -29,30 +28,48 @@ class GamesListView(TemplateView):
         context['user_games'] = None
         context['opened_games'] = None
 
+        _userGames = list()
+        _openedGames = list()
         _user = None
         try:
+            # process registered user case
             _user = User.objects.get(id=self.request.user.id)
+
+            # build user games list
+            for _userParticipation in models.UserParticipation.objects.filter(user=_user):
+                if _userParticipation.game.registrationsOpened():
+                    _userGames.append(_userParticipation.game)
+
+            # initialize user's games list
+            _games = models.Game.objects.exclude(participations__user=_user)
+            print('GamesListView.get_context_data: _games: %s' % _games)
+
         except User.DoesNotExist as e:
-            # anonymous user detection
-            pass
+            # process anonymous user case
+
+            # initialize user's games list
+            _games = models.Game.objects.all()
         except Exception as e:
             print('%s unexpected error while retrieving user : %s: %s %s' % (_l, self.request.user, type(e), e))
             raise Exception(e)
 
-        _games = models.Game.objects.all()
-        _userGames = list()
-        _openedGames = list()
+        # build opened games list
         for _game in _games:
             if not _game.registrationsOpened():
                 continue
+            _openedGames.append(_game)
 
-            if _user is not None:
-                if _user in _game.players.all():
-                    _userGames.append(_game)
-                else:
-                    _openedGames.append(_game)
-            else:
-                _openedGames.append(_game)
+        # for _game in _games:
+        #     if not _game.registrationsOpened():
+        #         continue
+        #
+        #     if _user is not None:
+        #         if _user in _game.players.all():
+        #             _userGames.append(_game)
+        #         else:
+        #             _openedGames.append(_game)
+        #     else:
+        #         _openedGames.append(_game)
 
         if len(_userGames) > 0:
             context['user_games'] = _userGames
@@ -93,8 +110,18 @@ class GameCreateView(FormView):
         return HttpResponseRedirect(reverse('game-home'))
 
 
-class GamePlayerPrepareView(TemplateView):
+class GamePlayerPrepareView(DetailView):
+    model = models.Game
+    context_object_name = 'game'
     template_name = 'game/game_player_prepare.html'
+
+    def get_object(self, *args, **kwargs):
+        user = get_object_or_404(models.Game, id=self.kwargs['game_id'])
+        return user
+
+    """ validates and stores player preparation data """
+    def post(self, request, *args, **kwargs):
+        return HttpResponseRedirect(reverse('game-board', kwargs={'game_id': self.kwargs.get('game_id')}))
 
 
 class GameBoardView(TemplateView):
@@ -104,30 +131,3 @@ class GameBoardView(TemplateView):
         context = super(GameBoardView, self).get_context_data(**kwargs)
         context['game_id'] = kwargs.get('game_id')
         return context
-
-
-# class GameJoinView(FormView):
-#     template_name = 'game/game_player_join_modal.html'
-#     form_class = forms.GameJoinForm
-#     model = models.Game
-#     # fields = ['player']
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(GameJoinView, self).get_context_data(**kwargs)
-#         # context.update({'prod_req': ProductionRequest.objects.get(id=self.kwargs['pk'])})
-#         return context
-#
-#     def form_valid(self, form):
-#         game = models.Game.objects.get(id=self.kwargs['game_id'])
-#
-#         print('GameJoinView.form_valid: %s' % form.cleaned_data['players'])
-#         if prod_req.back_to_consult == True:
-#             prod_req.tenant_name = form.cleaned_data['tenant_name']
-#             prod_req.save()
-#         else:
-#             form.save(commit=True)
-#         return HttpResponseRedirect(reverse('production-request'))
-#
-#     def form_invalid(self, form):
-#         messages.add_message(self.request, messages.ERROR, "One or more invalid form field", fail_silently=True)
-#         return HttpResponseRedirect(reverse('production-request'))

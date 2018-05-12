@@ -42,7 +42,7 @@ class GameStatusConstants(object):
         ]
 
     def as_list_labels(self):
-        return ''.join('%s,' % _ for _ in self.as_list())
+        return ', '.join([_ for _ in self.as_list()])
 
     def as_choices(self):
         _res = list()
@@ -70,13 +70,27 @@ class GameGenreConstants(object):
         ]
 
     def as_list_labels(self):
-        return ''.join('%s,' % _ for _ in self.as_list())
+        return ', '.join([_ for _ in self.as_list()])
 
     def as_choices(self):
         _res = list()
         for choice in self.as_list():
             _res.append(tuple((choice, choice)))
         return _res
+
+    def max_length(self):
+        _max = 0
+        for _genre in self.as_list():
+            _max = max(_max, len(_genre))
+        return _max
+
+    def keys_alphabet(self):
+        _alphabet = ''
+        for _key in self.as_list():
+            for _c in _key:
+                if not _alphabet.find(_c):
+                    _alphabet += _c
+        return _alphabet
 
 
 GAME_STATUS = GameStatusConstants()

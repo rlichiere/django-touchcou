@@ -9,6 +9,7 @@
             <tr>
                 <th>Game name</th>
                 <th>Game genre</th>
+                <th>Participants</th>
                 <th>Enter game</th>
             </tr>
             {% for game in opened_games %}
@@ -16,6 +17,17 @@
                 <td>{{ game.name }}</td>
                 <td>{{ game.genre }}</td>
 {#                <td><!-- <a type="button" class="btn btn-primary" href="{% url "game-join" game_id=game.id %}">Join</a>--></td>#}
+                <td>
+                    {% if game.participations %}
+                        {% for participation in game.participations.all %}
+                        {% if participation.user != user %}
+                            {{ participation.user }} ({{ participation.player_genre }})
+                        {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        No participants
+                    {% endif %}
+                </td>
                 <td></td>
             </tr>
             {% empty %}
