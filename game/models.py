@@ -12,7 +12,7 @@ class Game(models.Model):
     name = models.CharField(max_length=200)
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.CharField(max_length=200, choices=GAME_STATUS.as_choices(), default=GAME_STATUS.default)
-    genre = models.CharField(max_length=GAME_GENRES.max_length(),
+    genre = models.CharField(max_length=GAME_GENRES.length_of_longer_key(),
                              choices=GAME_GENRES.as_choices(),
                              default=GAME_GENRES.default)
 
@@ -138,7 +138,9 @@ class PlayerPreparationFieldWrapper(JsonFieldWrapper):
 class UserParticipation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='participations')
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='participations')
-    player_genre = models.CharField(max_length=GAME_GENRES.max_length(), choices=GAME_GENRES.keys_alphabet())
+    player_genre = models.CharField(max_length=GAME_GENRES.length_of_longer_key(), choices=GAME_GENRES.keys_alphabet())
+
+    # user preparation data
     _preparation = JsonField()
     preparation = None
 

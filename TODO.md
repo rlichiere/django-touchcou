@@ -1,11 +1,24 @@
 # Todo
 
+* Refactoring
+  * Rename properly `*User*` stuff to `*Player*`
+  * a
 * Protect views with LoginRequiredMixin
 * User
   * Profile page
   * integrate Game prepare modal
   * integrate Game board page
   * Autolog anonymous players when creating/joining a game
+* Game list
+  * Opened games:
+    * implement a button for each available participation
+  * User games:
+    * Rename to `user_participations`
+    * Enter must redirect:
+      * if player preparation is incomplete: -> to player preparation
+      * if player prepation is complete: -> to game board
+  * add panel `user_creations` (_Games you have created_)
+    * list games created by user
 * GameLogic API (methods should be added to Game model)
   * `createGame`
     * Description

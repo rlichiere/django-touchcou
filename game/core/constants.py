@@ -1,5 +1,44 @@
 
-class GameStatusConstants(object):
+from abc import abstractmethod
+
+
+class ConstantsGeneric(object):
+
+    @abstractmethod
+    def default(self):
+        """ must return the default key """
+        return str()
+
+    @abstractmethod
+    def as_list(self):
+        """ must return the list of constants keys """
+        return list()
+
+    def as_list_labels(self):
+        return ', '.join([_ for _ in self.as_list()])
+
+    def as_choices(self):
+        _res = list()
+        for choice in self.as_list():
+            _res.append(tuple((choice, choice)))
+        return _res
+
+    def keys_alphabet(self):
+        _alphabet = ''
+        for _key in self.as_list():
+            for _c in _key:
+                if not _alphabet.find(_c):
+                    _alphabet += _c
+        return _alphabet
+
+    def length_of_longer_key(self):
+        _max = 0
+        for _genre in self.as_list():
+            _max = max(_max, len(_genre))
+        return _max
+
+
+class GameStatusConstants(ConstantsGeneric):
     WAITING_REGISTRATIONS_OPENING = 'WAITING_REGISTRATIONS_OPENING'
     WAITING_PLAYERS = 'WAITING_PLAYERS'
     WAITING_GAME_LAUNCH = 'WAITING_GAME_LAUNCH'
@@ -12,24 +51,6 @@ class GameStatusConstants(object):
     def default(self):
         return self.WAITING_REGISTRATIONS_OPENING
 
-    def getNext(self, status):
-        if status == self.WAITING_REGISTRATIONS_OPENING:
-            return self.WAITING_PLAYERS
-        if status == self.WAITING_PLAYERS:
-            return self.WAITING_GAME_LAUNCH
-        if status == self.WAITING_GAME_LAUNCH:
-            return self.WAITING_PLAYER_INPUT
-        if status == self.WAITING_PLAYER_INPUT:
-            return self.PROCESSING_PLAYER_INPUT
-        if status == self.PROCESSING_PLAYER_INPUT:
-            return self.PLAYER_WINS
-        if status == self.PLAYER_WINS:
-            return self.FINISHED
-        if status == self.FINISHED:
-            return self.FINISHED
-        else:
-            return self.WAITING_REGISTRATIONS_OPENING
-
     def as_list(self):
         return [
             self.WAITING_REGISTRATIONS_OPENING,
@@ -41,17 +62,32 @@ class GameStatusConstants(object):
             self.FINISHED,
         ]
 
-    def as_list_labels(self):
-        return ', '.join([_ for _ in self.as_list()])
+    def getNext(self, status):
+        if status == self.WAITING_REGISTRATIONS_OPENING:
+            return self.WAITING_PLAYERS
 
-    def as_choices(self):
-        _res = list()
-        for choice in self.as_list():
-            _res.append(tuple((choice, choice)))
-        return _res
+        if status == self.WAITING_PLAYERS:
+            return self.WAITING_GAME_LAUNCH
+
+        if status == self.WAITING_GAME_LAUNCH:
+            return self.WAITING_PLAYER_INPUT
+
+        if status == self.WAITING_PLAYER_INPUT:
+            return self.PROCESSING_PLAYER_INPUT
+
+        if status == self.PROCESSING_PLAYER_INPUT:
+            return self.PLAYER_WINS
+
+        if status == self.PLAYER_WINS:
+            return self.FINISHED
+
+        if status == self.FINISHED:
+            return self.FINISHED
+        else:
+            return self.WAITING_REGISTRATIONS_OPENING
 
 
-class GameGenreConstants(object):
+class GameGenreConstants(ConstantsGeneric):
     HF = 'HF'
     FH = 'FH'
     HH = 'HH'
@@ -68,29 +104,6 @@ class GameGenreConstants(object):
             self.HH,
             self.FF,
         ]
-
-    def as_list_labels(self):
-        return ', '.join([_ for _ in self.as_list()])
-
-    def as_choices(self):
-        _res = list()
-        for choice in self.as_list():
-            _res.append(tuple((choice, choice)))
-        return _res
-
-    def max_length(self):
-        _max = 0
-        for _genre in self.as_list():
-            _max = max(_max, len(_genre))
-        return _max
-
-    def keys_alphabet(self):
-        _alphabet = ''
-        for _key in self.as_list():
-            for _c in _key:
-                if not _alphabet.find(_c):
-                    _alphabet += _c
-        return _alphabet
 
 
 GAME_STATUS = GameStatusConstants()
