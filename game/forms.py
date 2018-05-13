@@ -9,7 +9,7 @@ from .models import createGame
 
 class CreateGameForm(forms.Form):
     name = forms.CharField(label='Game name', help_text='Give a name to your game')
-    genre = forms.CharField(label='Game genre', help_text='Select a game genre : %s' % GAME_GENRES.as_list_labels())
+    genre = forms.ChoiceField(label='Game genre', help_text='Select genre of game', choices=GAME_GENRES.as_choices())
     creator = forms.CharField(label='Game creator', help_text='Select a player name', required=False)
 
     def __init__(self, *args, **kwargs):
